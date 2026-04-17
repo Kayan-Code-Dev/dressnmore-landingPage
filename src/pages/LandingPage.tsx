@@ -7,9 +7,9 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { getLoginUrl } from "@/lib/app-url";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState, useEffect, useRef } from 'react';
@@ -399,7 +399,11 @@ export default function LandingPage() {
               </button>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate('/login')}
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.assign(getLoginUrl());
+                }}
                 className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${isScrolled ? 'text-blue-700 hover:bg-blue-50' : 'text-white hover:bg-white/10'}`}>
                 <i className="ri-login-circle-line ml-1"></i>
                 تسجيل الدخول

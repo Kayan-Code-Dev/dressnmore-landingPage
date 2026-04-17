@@ -1,3 +1,4 @@
+import { getLoginUrl } from '@/lib/app-url';
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -210,7 +211,11 @@ export default function AboutPage() {
               ))}
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={() => navigate('/login')}
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.assign(getLoginUrl());
+                }}
                 className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${isScrolled ? 'text-blue-700 hover:bg-blue-50' : 'text-white hover:bg-white/10'}`}>
                 <i className="ri-login-circle-line ml-1"></i>
                 تسجيل الدخول
@@ -626,7 +631,14 @@ export default function AboutPage() {
               <button onClick={() => navigate('/about')} className="hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap text-white/70">من نحن</button>
               <button onClick={() => scrollTo('team')} className="hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">الفريق</button>
               <button onClick={() => scrollTo('timeline')} className="hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">رحلتنا</button>
-              <button onClick={() => navigate('/login')} className="hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">تسجيل الدخول</button>
+              <button
+                type="button"
+                onClick={() => {
+                  window.location.assign(getLoginUrl());
+                }}
+                className="hover:text-white transition-colors duration-300 cursor-pointer whitespace-nowrap">
+                تسجيل الدخول
+              </button>
             </div>
             <div className="text-white/30 text-sm">© 2025 DressnMore. جميع الحقوق محفوظة</div>
           </div>
