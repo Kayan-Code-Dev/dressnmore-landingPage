@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="fonts-loading">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DressnMore - نظام إدارة شامل لأتيليهات التفصيل والأزياء الراقية</title>
+    <meta name="description" content="نظام DressnMore لإدارة الأتيليهات - إدارة متكاملة للموردين، العملاء، المخزون، الفواتير، والتقارير في منصة واحدة سهلة الاستخدام." />
+    <link rel="stylesheet" href="/fonts/cairo.css" />
+    <link rel="stylesheet" href="/fonts/remixicon.css" />
+    <style>
+      html.fonts-loading body { visibility: hidden !important; }
+      body { font-family: 'Cairo', sans-serif; }
+      @keyframes fade-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+      .animate-fade-in { animation: fade-in 0.8s ease-out; }
+    </style>
+    <script>
+      (function(){
+        var d = document.documentElement;
+        Promise.all([
+          document.fonts.load('400 1em Cairo'),
+          document.fonts.load('700 1em Cairo'),
+          document.fonts.load('1em remixicon')
+        ]).then(function(){ d.classList.remove('fonts-loading'); });
+        setTimeout(function(){ d.classList.remove('fonts-loading'); }, 2500);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
