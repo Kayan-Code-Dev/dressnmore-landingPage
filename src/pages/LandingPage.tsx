@@ -438,7 +438,7 @@ export default function LandingPage() {
                 <span className="text-cyan-300 text-sm font-medium">نظام إدارة الجيل القادم</span>
               </div>
               <h1 className="text-5xl lg:text-7xl font-black leading-tight mb-6 text-white">
-                majd أتيليهك
+                أدِر أتيليهك
                 <br />
                 <span className="shimmer-text">بذكاء وفخامة</span>
                 <br />
