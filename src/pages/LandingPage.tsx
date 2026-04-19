@@ -9,11 +9,10 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { getLoginUrl } from "@/lib/app-url";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 const useInView = (threshold = 0.15) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -369,7 +368,7 @@ export default function LandingPage() {
       `}</style>
 
       {/* ===== NAVBAR ===== */}
-      <nav className={`fixed top-0 right-0 left-0 z-50 transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-blue-100/50' : 'bg-transparent'}`}>
+      <nav className={`fixed top-0 right-0 left-0 z-[100] transition-all duration-500 ${isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg shadow-blue-100/50' : 'bg-transparent'}`}>
         <div className="mx-auto px-8 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => scrollTo('hero')}>
@@ -399,15 +398,12 @@ export default function LandingPage() {
               </button>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  window.location.assign(getLoginUrl());
-                }}
-                className={`px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${isScrolled ? 'text-blue-700 hover:bg-blue-50' : 'text-white hover:bg-white/10'}`}>
+              <Link
+                to="/login"
+                className={`inline-flex items-center px-5 py-2.5 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap cursor-pointer no-underline ${isScrolled ? 'text-blue-700 hover:bg-blue-50' : 'text-white hover:bg-white/10'}`}>
                 <i className="ri-login-circle-line ml-1"></i>
                 تسجيل الدخول
-              </button>
+              </Link>
               <button onClick={() => scrollTo('contact')}
                 className="bg-gradient-to-l from-blue-900 to-blue-500 text-white px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-lg hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 whitespace-nowrap cursor-pointer">
                 ابدأ مجاناً
