@@ -1,4 +1,20 @@
-name: Deploy to VPS
+# Copy to your LANDING repo as: .github/workflows/deploy.yml
+#
+# GitHub → Settings → Secrets and variables → Actions, add:
+#   VPS_HOST      e.g. 203.0.113.50 or server1.example.com
+#   VPS_USERNAME  e.g. root or deploy
+#   VPS_SSH_KEY   private key (full PEM, including BEGIN/END lines)
+# Optional:
+#   VPS_PORT         SSH port (if omitted, set port: 22 in each appleboy step)
+#   VITE_BACKEND_URL API base for Vite build (if omitted, default URL in Build step is used)
+#
+# Server nginx must use:
+#   root /var/www/dressnmore-landingPage/dist;
+#
+# The SSH user must be allowed to: mkdir, chown, nginx -t, systemctl reload nginx
+# (root is simplest; a deploy user needs sudo for those commands — adjust script: below).
+
+name: Deploy landing to VPS
 
 on:
   push:
@@ -6,12 +22,16 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: deploy-landing-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -23,28 +43,47 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build project
+      - name: Build
         run: npm run build
         env:
-          VITE_BACKEND_URL: https://alhatoum.dressnmore.it.com/api/v1
+          # Override: set repository secret VITE_BACKEND_URL (optional)
+          VITE_BACKEND_URL: ${{ secrets.VITE_BACKEND_URL || 'https://alhatoum.dressnmore.it.com/api/v1' }}
 
-      - name: Copy built files to VPS
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          port: 22
-          source: "dist/*"
-          target: "/var/www/dressnmore-landingPage"
-          strip_components: 1
-          rm: true
-
-      - name: Reload Nginx
+      - name: Prepare remote directory
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: 22
-          script: systemctl reload nginx
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            mkdir -p /var/www/dressnmore-landingPage/dist
+            rm -rf /var/www/dressnmore-landingPage/dist/*
+
+      - name: Upload dist to VPS
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          source: "dist/*"
+          target: "/var/www/dressnmore-landingPage/dist"
+          strip_components: 1
+          rm: false
+
+      - name: Permissions and reload Nginx
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            chown -R nginx:nginx /var/www/dressnmore-landingPage
+            find /var/www/dressnmore-landingPage -type d -exec chmod 755 {} \;
+            find /var/www/dressnmore-landingPage -type f -exec chmod 644 {} \;
+            nginx -t
+            systemctl reload nginx
