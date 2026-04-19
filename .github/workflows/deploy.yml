@@ -27,7 +27,6 @@ jobs:
         run: npm run build
         env:
           VITE_BACKEND_URL: https://alhatoum.dressnmore.it.com/api/v1
-          VITE_APP_URL: https://dressnmore.it.com
 
       - name: Copy built files to VPS
         uses: appleboy/scp-action@v0.1.7
